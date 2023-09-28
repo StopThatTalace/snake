@@ -4,8 +4,8 @@ speed = 15
 
 # windows sizes
 
-frame_size_x = 720
-frame_size_y = 480
+frame_size_x = 960
+frame_size_y = 540
 
 check_errors = pygame.init()
 
@@ -24,14 +24,13 @@ black = pygame.Color(0,0,0)
 white = pygame.Color(255,255,255)
 red = pygame.Color(255,0,0)
 green = pygame.Color(0,255,0)
-lighter_green = pygame.Color(0, 100, 0)
 blue = pygame.Color(0,0,255)
 
 fps_controller = pygame.time.Clock()
 
 # one snake square size
 
-square_size = 20
+square_size = 30
 
 def init_vars():
     global head_pos, snake_body, food_pos, food_spawn, score, direction, head_color
@@ -42,7 +41,7 @@ def init_vars():
                 random.randrange(1,(frame_size_y // square_size)) * square_size]
     food_spawn = True
     score = 0
-    head_color = lighter_green
+    head_color = white
 
 init_vars()
 
@@ -95,12 +94,19 @@ while True:
 
 
     # eating apple
+
     snake_body.insert(0, list(head_pos))
     if head_pos[0] == food_pos[0] and head_pos[1] == food_pos[1]:
         score += 1
         food_spawn = False
     else:
         snake_body.pop()
+
+    # features speed x score up to 5
+    if score == 5 and speed <= 15:
+        speed += 2
+
+
 
     # spawn food
     if not food_spawn:
@@ -114,8 +120,7 @@ while True:
         pygame.draw.rect(game_window, green, pygame.Rect(
             pos[0] + 2, pos[1] + 2,
             square_size - 2, square_size))
-        pygame.draw.rect(game_window, red, pygame.Rect(food_pos[0],
-                                                       food_pos[1], square_size, square_size))
+        pygame.draw.rect(game_window, red, pygame.Rect(food_pos[0], food_pos[1], square_size, square_size))
         if pos == head_pos:
             pygame.draw.rect(game_window, head_color, pygame.Rect(
                 pos[0] + 2, pos[1] + 2,
@@ -133,6 +138,6 @@ while True:
         if head_pos[0] == block[0] and head_pos[1] == block[1]:
             init_vars()
 
-    show_score(1, white, 'consolas', 20)
+    show_score(1, white, 'consolas', 30)
     pygame.display.update()
     fps_controller.tick(speed)
